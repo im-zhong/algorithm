@@ -10,3 +10,9 @@ All the algorithms.
 ## Tips
 
 1. <https://github.com/microsoft/vscode-pull-request-github/issues/4624> close the proxy, cause clash already use the global proxy
+
+## Pre
+
+1. ln -s ~/.ssh .ssh
+2. ln -s ~/.gitconfig .gitconfig
+3. ln -s ~/.git-credentials .git-credentials

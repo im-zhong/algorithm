@@ -35,6 +35,15 @@ services:
       # - /etc/localtime:/etc/localtime:ro
       # macos上面是没有这个文件的
       # - /etc/timezone:/etc/timezone:ro # 如果主机上存在这个文件
+      # can not use git through ssh, so I need to volume the related file into the container
+      # 想起来了，docker只能挂载当前目录的文件，那感觉没办法了呀，难道每次都要手动复制吗
+      # 只能在本地copy一份git相关的配置文件，可以是一个软连接
+      # 然后挂在到对应的文件里面
+      # 然后启动的时候，就需要检查这个配置，这个需要写到readme，算了，放在这里也行，
+      # 还必须以. 开头，否则会认为是某个有名字的volume了
+      - ./etc/.ssh:/home/${USER}/.ssh:ro
+      - ./etc/.gitconfig:/home/${USER}/.gitconfig:ro
+      - ./etc/.git-credentials:/home/${USER}/.git-credentials:ro
 
     networks:
       algorithm-network:
