@@ -14,7 +14,8 @@ Checks: "*,
   -modernize-use-trailing-return-type,
   -fuchsia-default-arguments-calls,
   -fuchsia-overloaded-operator,
-  -cppcoreguidelines-pro-bounds-pointer-arithmetic"
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-owning-memory"
 
 WarningsAsErrors: "*"
 
