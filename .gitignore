@@ -208,4 +208,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-etc/
+## Mine
+.etc/
+.vscode-server/

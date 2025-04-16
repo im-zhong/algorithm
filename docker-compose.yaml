@@ -41,9 +41,11 @@ services:
       # 然后挂在到对应的文件里面
       # 然后启动的时候，就需要检查这个配置，这个需要写到readme，算了，放在这里也行，
       # 还必须以. 开头，否则会认为是某个有名字的volume了
-      - ./etc/.ssh:/home/${USER}/.ssh:ro
-      - ./etc/.gitconfig:/home/${USER}/.gitconfig:ro
-      - ./etc/.git-credentials:/home/${USER}/.git-credentials:ro
+      - ./.etc/.ssh:/home/${USER}/.ssh:ro
+      - ./.etc/.gitconfig:/home/${USER}/.gitconfig:ro
+      - ./.etc/.git-credentials:/home/${USER}/.git-credentials:ro
+      # persist the vscode server and extensions in rebuilds
+      - ./.vscode-server:/home/${USER}/.vscode-server
 
     networks:
       algorithm-network:

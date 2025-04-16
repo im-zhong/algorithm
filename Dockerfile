@@ -14,7 +14,21 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
     /etc/yum.repos.d/fedora-updates.repo
 
 RUN dnf update -y && \
-    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip
+    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip pip
+
+RUN pip install --upgrade pip && \
+    pip install ruff uv
+
+# install vcpkg 
+RUN mkdir -p /opt/vcpkg && \
+    git clone https://github.com/microsoft/vcpkg.git /opt/vcpkg && \
+    /opt/vcpkg/bootstrap-vcpkg.sh
+# The environment variables set with export in a RUN command only exist within that specific RUN instruction and don't persist in the final container environment. This happens because each RUN instruction in a Dockerfile is executed in its own shell session, and the environment is not carried forward between them.
+# To fix this and make VCPKG_ROOT available in your user's shell, use the ENV instruction in your Dockerfile instead:
+# export VCPKG_ROOT=/opt/vcpkg && \
+# export PATH=$PATH:$VCPKG_ROOT
+ENV VCPKG_ROOT=/opt/vcpkg
+ENV PATH=$PATH:$VCPKG_ROOT
 
 RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/10-nopasswd
 
