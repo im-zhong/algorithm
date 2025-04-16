@@ -20,3 +20,11 @@ All the algorithms.
 ## use python with uv
 
 1. uv init algorithm
+
+## use vcpkg <https://learn.microsoft.com/en-us/vcpkg/get_started/get-started-vscode?pivots=shell-bash>
+
+1. vcpkg new --application
+2. vcpkg add port doctest
+3. cmake --preset=vcpkg
+4. cmake --build build
+5. ./build/HelloWorld
