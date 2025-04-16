@@ -46,6 +46,8 @@ services:
       - ./.etc/.git-credentials:/home/${USER}/.git-credentials:ro
       # persist the vscode server and extensions in rebuilds
       - ./.vscode-server:/home/${USER}/.vscode-server
+      # Pre-commit installs its hooks repositories in your local cache directory (typically ~/.cache/pre-commit/ on Linux). When your container rebuilds, this cache is lost, forcing you to reinstall everything.
+      - ./pre-commit-cache:/home/${USER}/.cache/pre-commit
 
     networks:
       algorithm-network:
