@@ -25,6 +25,8 @@ All the algorithms.
    2. uv remove ruff
    3. uv run mypy .
 3. 而且uv默认会在root dir下创建venv环境，nice！！！
+4. uv run pre-commit install
+5. uv run pre-commit run -a
 
 ## use vcpkg <https://learn.microsoft.com/en-us/vcpkg/get_started/get-started-vscode?pivots=shell-bash>
 

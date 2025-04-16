@@ -211,3 +211,4 @@ cython_debug/
 ## Mine
 .etc/
 .vscode-server/
+node_modules/

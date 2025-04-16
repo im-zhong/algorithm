@@ -32,7 +32,7 @@ USER ${USER}
 
 # 这个vcpkg也太傻逼了，他运行的时候会在仓库目录下创建文件。。。无语
 # 那只能切换用户之后，在用户目录下面clone这个仓库了
-# install vcpkg 
+# install vcpkg
 # RUN mkdir -p /opt/vcpkg && \
 #     git clone https://github.com/microsoft/vcpkg.git /opt/vcpkg && \
 #     /opt/vcpkg/bootstrap-vcpkg.sh
