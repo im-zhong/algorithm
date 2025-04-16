@@ -19,7 +19,7 @@ All the algorithms.
 
 ## use python with uv
 
-1. uv init algorithm
+1. uv init . # will create several python files, espcially the pyproject.toml in the root dir
 
 ## use vcpkg <https://learn.microsoft.com/en-us/vcpkg/get_started/get-started-vscode?pivots=shell-bash>
 
