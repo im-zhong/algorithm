@@ -13,8 +13,9 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
     /etc/yum.repos.d/fedora.repo \
     /etc/yum.repos.d/fedora-updates.repo
 
+# Difftastic (a syntax-aware diff tool)
 RUN dnf update -y && \
-    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip pip
+    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip pip difft
 
 RUN pip install --upgrade pip && \
     pip install ruff uv

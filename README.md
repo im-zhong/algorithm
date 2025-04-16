@@ -16,3 +16,7 @@ All the algorithms.
 1. ln -s ~/.ssh .ssh
 2. ln -s ~/.gitconfig .gitconfig
 3. ln -s ~/.git-credentials .git-credentials
+
+## use python with uv
+
+1. uv init algorithm
