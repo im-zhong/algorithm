@@ -1,0 +1,43 @@
+# 原来如此
+# docker compose文件里面可以使用.env里面的变量定义
+
+# 关于这些设置是放在docker compose文件里还是放在dev container配置文件里
+# 有一个非常简单的判断方法
+# 就是你是否希望在生产环境也保留这个配置
+# 那么项目名字在生产环境也保留是合适的，这样可以看到是谁启动了这个服务
+
+# https://docs.docker.com/reference/compose-file/services/
+services:
+  algorithm:
+    # https://docs.docker.com/reference/compose-file/services/#build
+    # https://docs.docker.com/reference/compose-file/build/
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${UID}
+        USER: ${USER}
+        GROUP: ${GROUP}
+    # The image field allows you to specify the name and tag of the image that will be built.
+    image: algorithm:latest
+    # only for test
+    # entrypoint: ["/bin/bash", "-c", "tail -f /dev/null"]
+    hostname: algorithm
+    container_name: algorithm
+    # 我懂了，这个东西会覆盖docker默认规则生成的名字，也就是projectname servicename
+    # container_name: proxy-service-api-${USER}
+    # expose:
+    #   - "8000"
+    restart: unless-stopped
+    volumes:
+      - .:/home/${USER}/algorithm
+      # - /etc/localtime:/etc/localtime:ro
+      # macos上面是没有这个文件的
+      # - /etc/timezone:/etc/timezone:ro # 如果主机上存在这个文件
+
+    networks:
+      algorithm-network:
+
+networks:
+  algorithm-network:
