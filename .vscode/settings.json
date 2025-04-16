@@ -1,0 +1,14 @@
+{
+  "editor.formatOnSave": true,
+  // actually this line do not work, I don't know why
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "clangd.arguments": [
+    "--header-insertion=never",
+    "--background-index",
+    "--clang-tidy",
+    "--completion-style=detailed",
+    "--function-arg-placeholders=false"
+  ]
+}

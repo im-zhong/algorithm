@@ -1,0 +1,21 @@
+Checks: "*,
+  -altera-id-dependent-backward-branch,
+  -altera-struct-pack-align,
+  -altera-unroll-loops,
+  -android-cloexec-fopen,
+  -bugprone-easily-swappable-parameters,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-avoid-non-const-global-variables,
+  -llvmlibc-*,
+  -misc-no-recursion,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -modernize-use-trailing-return-type,
+  -fuchsia-default-arguments-calls,
+  -fuchsia-overloaded-operator,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic"
+
+WarningsAsErrors: "*"
+
+HeaderFilterRegex: ".*h$"
