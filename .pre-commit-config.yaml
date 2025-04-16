@@ -81,6 +81,11 @@ repos:
     hooks:
       - id: clang-format
       - id: clang-tidy
+        args: [
+            "--use-color",
+            "--fix",
+            "-p=./build", #  # Explicitly tell clang-tidy where to find the compilation database
+          ]
       # - id: include-what-you-use
 
   # # Black(https://black.readthedocs.io/en/stable/) is the uncompromising python code formatter
