@@ -2,6 +2,20 @@
 
 All the algorithms.
 
+## How to use this repo?
+
+1. clone this repo: `git clone https://github.com/im-zhong/algorithm`
+2. create a .etc folder to mount the ssh config and git config into the container
+   1. `mkdir -p .etc`
+   2. `ln -s ~/.ssh ./.etc/ssh`
+   3. `ln -s ~/.gitconfig ./.etc/gitconfig`
+   4. `ln -s ~/.git-credentials ./.etc/git-credentials`
+   5. or you could just comment the volumes codes in the docker-compose.yml file and do not mount the .etc folder into the container, in this way you could not push your code to the repo
+3. open it in the vscode
+4. install the [Dev Containers](https://marketplace.visualstudio.com/items/?itemName=ms-vscode-remote.remote-containers) extension
+5. use command: 'Dev Container: Reopen in container'
+6. just wait for all the thing done for a few minutes, then you are good to go.
+
 ## 1. docker
 
 1. 咱们还是用docker吧，因为咱们会装很多的东西，尤其是python的环境，
