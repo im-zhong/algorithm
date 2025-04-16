@@ -10,9 +10,11 @@
 // 所以这里就简单的放一个int在里面就行了，
 
 // #include <doctest/doctest.h>
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
 #include <cstddef>
 #include <iterator>
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+
 #include <doctest/doctest.h>
 #include <forward_list>
 #include <iostream>
