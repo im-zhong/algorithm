@@ -162,6 +162,10 @@ public:
     // }
 
   private:
+    // TODO(zhangzhong)
+    // 不对，他不需要一个额外的head指针，我们就只保存一个当前节点就行了
+    // 让end{head}就行了！这样就完美了
+    // 每个迭代器就只有一个指针，zero cost abstraction !
     SinglyLinkedListNode* head{nullptr};
     SinglyLinkedListNode* current_node{nullptr};
 
