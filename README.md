@@ -20,6 +20,11 @@ All the algorithms.
 ## use python with uv
 
 1. uv init . # will create several python files, espcially the pyproject.toml in the root dir
+2. <https://docs.astral.sh/uv/getting-started/features/#projects>
+   1. uv add ruff
+   2. uv remove ruff
+   3. uv run mypy .
+3. 而且uv默认会在root dir下创建venv环境，nice！！！
 
 ## use vcpkg <https://learn.microsoft.com/en-us/vcpkg/get_started/get-started-vscode?pivots=shell-bash>
 
