@@ -11,6 +11,7 @@
 
 // #include <doctest/doctest.h>
 
+#include <algorithm>
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 #include <cstddef>
@@ -28,6 +29,8 @@
 class SinglyLinkedListNode {
 
 public:
+  SinglyLinkedListNode() : next{this} {}
+
   SinglyLinkedListNode(int value, SinglyLinkedListNode* next)
       : next{next}, value{value} {};
   explicit SinglyLinkedListNode(int value) : value{value} {};
@@ -94,6 +97,12 @@ private:
 class SinglyLinkedList {
 
 public:
+  SinglyLinkedList() : head{0} {
+    // 这里的head是一个虚拟节点
+    // 这个节点的next指向自己
+    this->head.SetNext(&this->head);
+  }
+
   // 最重要的是实现一个遍历的方法
   // 最简单的就是实现一个迭代器
   // 刚好我不太会写迭代器，用这些算法来实践一下
@@ -204,7 +213,7 @@ public:
   void clear() {
     // 比较简单的实现方法是erase after head
     // 然后循环调用即可
-    while (this->empty()) {
+    while (!this->empty()) {
       this->pop_front();
     }
   }
@@ -401,6 +410,7 @@ public:
 
     // 更新size
     this->_size = merged_size;
+    other._size = 0;
   }
 
   // cut 单链表也是可以做到的，对于双链表非常简单
@@ -447,11 +457,27 @@ public:
   //   }
   // }
 
+  // 这个advance是不对的！！！
+  // 我们如果要碰到head了，应该返回end的前一个元素！那才是tail呀，不然就乱套了
   SinglyLinkedListNode* advance(SinglyLinkedListNode* node, int step) {
     // 这里的实现是错误的，因为我们没有考虑到循环链表的情况
     // 这里应该是比较两个节点的值
+    // if (step <= 0) {
+    //   return node;
+    // }
 
-    while (step > 0 && node != &this->head) {
+    // 如果node就是head 需要特判
+    // 这对吗，如果我们传入的是end呢？
+    // 现在我们不需要这个特判了
+    // 哪怕传入的是head，下面的代码也可以处理1
+    // if (node == &this->head) {
+    //   node = node->GetNext();
+    //   step--;
+    // }
+
+    // 傻逼了，如果传入的node就是head的话 ，这个循环就直接退出了
+    while (step > 0 && node->GetNext() != &this->head) {
+
       node = node->GetNext();
       --step;
     }
@@ -519,18 +545,23 @@ public:
         // 因为在merge之后，现在的right_tail的位置可能就不是tail了
 
         // 但是此时 right_tail可能就是head了
-        SinglyLinkedListNode* next_head = &this->head;
-        if (right_tail != &this->head) {
-          // 说明已经到头了
-          // 这里的实现是错误的，因为我们没有考虑到循环链表的情况
-          // 这里应该是比较两个节点的值
-          next_head = right_tail->GetNext();
-        }
+        // SinglyLinkedListNode* next_head = &this->head;
+        // if (right_tail != &this->head) {
+        //   // 说明已经到头了
+        //   // 这里的实现是错误的，因为我们没有考虑到循环链表的情况
+        //   // 这里应该是比较两个节点的值
+        //   next_head = right_tail->GetNext();
+        // }
 
         _inplace_merge(head, tail, right_head, right_tail);
 
         // begin = right_tail->GetNext();
-        head = next_head;
+        // 这里的head不对，应该重新advance！
+        // 而且应该advance到tail的位置
+        head = advance(head, 2 * step);
+        // if (head == &this->head) {
+        //   break;
+        // }
       }
     }
   }
@@ -574,11 +605,11 @@ public:
         SinglyLinkedListNode* tmp = curr->GetNext();
         curr->EraseAfter();
         delete tmp;
+        // 不对，在删除的时候，不应该移动指针
       } else {
         prev_value = curr->GetNext()->GetValue();
+        curr = curr->GetNext();
       }
-
-      curr = curr->GetNext();
     }
   }
 
@@ -623,13 +654,26 @@ public:
   void remove(int value) {
     // 显然还是需要一个work指针
     // 或者使用迭代器？
-    auto iter = begin();
-    while (iter != end()) {
-      if (*iter == value) {
-        // 原来如此，这个函数回返回删除后的迭代器，刚好满足这里的要求
-        iter = erase_after(iter);
+    // auto iter = begin();
+    // while (iter != end()) {
+    //   if (*iter == value) {
+    //     // 傻逼呀 怎么是erase after。。。
+    //     // 还是用指针来处理吧
+    //     // 原来如此，这个函数回返回删除后的迭代器，刚好满足这里的要求
+    //     iter = erase_after(iter);
+    //   } else {
+    //     ++iter;
+    //   }
+    // }
+
+    SinglyLinkedListNode* curr = &this->head;
+    while (curr->GetNext() != &this->head) {
+      if (curr->GetNext()->GetValue() == value) {
+        SinglyLinkedListNode* tmp = curr->GetNext();
+        curr->EraseAfter();
+        delete tmp;
       } else {
-        ++iter;
+        curr = curr->GetNext();
       }
     }
   }
@@ -638,7 +682,7 @@ public:
 
   // Moves elements from another forward_list to *this. The elements are
   // inserted after the element pointed to by pos.
-  static void splice_after(iterator pos, SinglyLinkedList& other) {
+  void splice_after(iterator pos, SinglyLinkedList& other) {
     // 最常见的方式应该是调用 splice_after(end())
     // 也就是把两个链表给拼接起来
 
@@ -653,12 +697,36 @@ public:
       // 我们需要拿到指针！
       SinglyLinkedListNode* front = other_head->GetNext();
 
+      // 草，要先删除，在插入
+      // 不对，不能pop，因为pop回释放资源！
+      // other.pop_front();
+      other_head->EraseAfter();
+      other._size--;
+
       // 然后把这个节点插入到pos后面
       insert_after->InsertAfter(front);
       // 然后更新insert_after
       insert_after = front;
+    }
+  }
 
-      other_head->EraseAfter();
+  // I need a function to print this container
+  // helper for my debug
+  void print() {
+    // use std::cout
+    // except for doctest, do not use any other libraries
+    // head -> next -> next -> ... -> head
+    // size =
+    // 看看lldb是怎么打印forward list的？
+    // SinglyLinkedList:
+    //    size: 0,
+    //    head: (ptr){next: 0x7f8c3b80a0b0, value: 0}
+    //    -> (0x7f8c3b80a0b0) {}
+    std::cout << "SinglyLinkedList: " << "\n";
+    std::cout << "  size: " << this->size() << "\n";
+    std::cout << "  head: " << "(" << &this->head << ")" << "\n";
+    for (auto iter = this->begin(); iter != this->end(); ++iter) {
+      std::cout << "  -> (" << iter.current_node << ") " << *iter << "\n";
     }
   }
 
@@ -667,6 +735,16 @@ private:
                       SinglyLinkedListNode* left_tail,
                       SinglyLinkedListNode* right_head,
                       SinglyLinkedListNode* right_tail) {
+
+    // right 可能为空
+    if (right_head == right_tail) {
+      return;
+    }
+    // // 这个在step为1的时候肯定是对的。。。
+    // //
+    // if (right_head->GetNext() == &this->head) {
+    //   return;
+    // }
 
     // 首相，两个链表的长度不一定相同
     // 但是一定不是空的！
@@ -779,7 +857,7 @@ private:
 
     // 找到那个还有元素的链表
     SinglyLinkedListNode* remaining_head =
-        this_head->GetNext() != &this->head ? this_head : other_head;
+        this_head->GetNext() != this_head ? this_head : other_head;
 
     // 把remaing iter的元素挨个pop front出来，插入到insert_iter的后面即可
     // 这里这个head的指针就是他自己啊 要把这些iter的名字改成head
@@ -815,8 +893,8 @@ private:
     return {new_head.GetNext(), insert_after};
   }
 
-  static SinglyLinkedListNode* _pop_front_to(SinglyLinkedListNode* head,
-                                             SinglyLinkedListNode* insert) {
+  SinglyLinkedListNode* _pop_front_to(SinglyLinkedListNode* head,
+                                      SinglyLinkedListNode* insert) {
 
     SinglyLinkedListNode* tmp = head->GetNext();
     head->EraseAfter();
@@ -840,4 +918,308 @@ TEST_CASE("testing singly linked list") {
   std::cout << *it << "\n";
 
   list.sort();
+}
+
+TEST_CASE("Basic operations: push_front, pop_front, empty, size") {
+  SinglyLinkedList myList;
+  myList.print();
+  std::forward_list<int> stdList;
+
+  // Test empty
+  CHECK(myList.empty() == stdList.empty());
+
+  // Test push_front
+  for (int i = 5; i > 0; --i) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  CHECK(myList.size() == 5);
+  CHECK(myList.empty() == stdList.empty());
+
+  // Test pop_front
+  myList.pop_front();
+  stdList.pop_front();
+
+  CHECK(myList.size() == 4);
+
+  // Cross-validate contents
+  auto myIt = myList.begin();
+  auto stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  CHECK(myIt == myList.end());
+  CHECK(stdIt == stdList.end());
+}
+
+TEST_CASE("Element access: front") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Empty list check omitted since std::forward_list has undefined behavior
+
+  myList.push_front(42);
+  stdList.push_front(42);
+
+  CHECK(myList.front() == stdList.front());
+
+  myList.push_front(99);
+  stdList.push_front(99);
+
+  CHECK(myList.front() == stdList.front());
+}
+
+TEST_CASE("Modifiers: insert_after, erase_after, clear") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Insert some initial elements
+  for (int i = 3; i > 0; --i) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  // Insert after the first element
+  auto myIt = myList.begin();
+  auto stdIt = stdList.begin();
+
+  myList.insert_after(myIt, 99);
+  stdList.insert_after(stdIt, 99);
+
+  // Compare results
+  myIt = myList.begin();
+  stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  // Erase after the first element
+  myIt = myList.begin();
+  stdIt = stdList.begin();
+
+  myList.erase_after(myIt);
+  stdList.erase_after(stdIt);
+
+  // Compare results again
+  myIt = myList.begin();
+  stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  // Test clear
+  myList.clear();
+  stdList.clear();
+
+  CHECK(myList.empty());
+  CHECK(stdList.empty());
+}
+
+TEST_CASE("Operations: sort") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Insert in reverse order
+  for (int const i : {7, 2, 9, 1, 5, 3, 8, 4, 6}) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  // Sort both lists
+  myList.sort();
+  stdList.sort();
+
+  // Compare results
+  auto myIt = myList.begin();
+  auto stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+}
+
+TEST_CASE("Operations: unique") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Insert with duplicates
+  for (int const i : {1, 2, 2, 3, 3, 3, 4, 4, 4, 4}) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  // Sort first (to group duplicates)
+  myList.sort();
+  stdList.sort();
+
+  // Remove duplicates
+  myList.unique();
+  stdList.unique();
+
+  // Compare results
+  auto myIt = myList.begin();
+  auto stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  CHECK(myIt == myList.end());
+  CHECK(stdIt == stdList.end());
+}
+
+TEST_CASE("Operations: reverse") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Insert some elements
+  for (int i = 1; i <= 5; ++i) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  // Reverse both lists
+  myList.reverse();
+  stdList.reverse();
+
+  // Compare results
+  auto myIt = myList.begin();
+  auto stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+}
+
+TEST_CASE("Operations: find, contains, remove") {
+  SinglyLinkedList myList;
+  std::forward_list<int> stdList;
+
+  // Insert some elements
+  for (int const i : {5, 3, 7, 2, 9}) {
+    myList.push_front(i);
+    stdList.push_front(i);
+  }
+
+  // Test find
+  auto myIt = myList.find(7);
+  auto stdIt = std::find(stdList.begin(), stdList.end(), 7);
+
+  CHECK(*myIt == *stdIt);
+
+  // Test contains
+  CHECK(myList.contains(7) == true);
+  CHECK(myList.contains(99) == false);
+
+  // Test remove
+  myList.remove(7);
+  stdList.remove(7);
+
+  // Should no longer contain 7
+  CHECK(myList.contains(7) == false);
+
+  // Compare resulting lists
+  myIt = myList.begin();
+  stdIt = stdList.begin();
+  while (myIt != myList.end() && stdIt != stdList.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+}
+
+TEST_CASE("Operations: merge") {
+  SinglyLinkedList myList1;
+  SinglyLinkedList myList2;
+  std::forward_list<int> stdList1;
+  std::forward_list<int> stdList2;
+
+  // Insert sorted elements
+  for (int const i : {9, 7, 5, 3, 1}) {
+    myList1.push_front(i);
+    stdList1.push_front(i);
+  }
+
+  for (int const i : {10, 8, 6, 4, 2}) {
+    myList2.push_front(i);
+    stdList2.push_front(i);
+  }
+
+  // Sort both pairs
+  myList1.sort();
+  myList2.sort();
+  stdList1.sort();
+  stdList2.sort();
+
+  // Merge
+  myList1.merge(myList2);
+  stdList1.merge(stdList2);
+
+  // Check if myList2 is empty
+  CHECK(myList2.empty());
+  CHECK(stdList2.empty());
+
+  // Compare merged lists
+  auto myIt = myList1.begin();
+  auto stdIt = stdList1.begin();
+  while (myIt != myList1.end() && stdIt != stdList1.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  CHECK(myIt == myList1.end());
+  CHECK(stdIt == stdList1.end());
+}
+
+TEST_CASE("Operations: splice_after") {
+  SinglyLinkedList myList1;
+  SinglyLinkedList myList2;
+  std::forward_list<int> stdList1;
+  std::forward_list<int> stdList2;
+
+  // Insert elements
+  for (int const i : {3, 2, 1}) {
+    myList1.push_front(i);
+    stdList1.push_front(i);
+  }
+
+  for (int const i : {6, 5, 4}) {
+    myList2.push_front(i);
+    stdList2.push_front(i);
+  }
+
+  // Splice after the first element
+  auto myIt = myList1.begin();
+  auto stdIt = stdList1.begin();
+
+  myList1.splice_after(myIt, myList2);
+  stdList1.splice_after(stdIt, stdList2);
+
+  // Check if myList2 is empty
+  CHECK(myList2.empty());
+  CHECK(stdList2.empty());
+
+  // Compare resulting lists
+  myIt = myList1.begin();
+  stdIt = stdList1.begin();
+  while (myIt != myList1.end() && stdIt != stdList1.end()) {
+    CHECK(*myIt == *stdIt);
+    ++myIt;
+    ++stdIt;
+  }
+
+  CHECK(myIt == myList1.end());
+  CHECK(stdIt == stdList1.end());
 }
