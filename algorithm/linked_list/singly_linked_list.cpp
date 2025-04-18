@@ -166,6 +166,8 @@ public:
       return this->current_node == other.current_node;
     }
 
+    bool operator!=(const iterator& other) const { return !(*this == other); }
+
     // 循环链表的优点在这里就体现出来了，我们不需要对尾部节点进行特判，因为end其实就是头节点
     // 否则我们需要对nullptr进行特判
     // bool operator!=(const iterator& other) const {
@@ -530,6 +532,133 @@ public:
         // begin = right_tail->GetNext();
         head = next_head;
       }
+    }
+  }
+
+  // Removes all consecutive duplicate elements from the container. Only the
+  // first element in each group of equal elements is left.
+  // 所以实际上回清楚内存事吗
+  void unique() {
+
+    if (this->empty()) {
+      return;
+    }
+
+    // 否则我们一定能拿到第一个元素
+    // 而且第一个元素一定不可能重复
+    // 所以可以直接特判
+
+    // 非常简单，应该就是保存一个当前的节点指针就行了 work
+    // 从head开始
+
+    SinglyLinkedListNode* curr = this->head.GetNext();
+    int prev_value = curr->GetValue();
+
+    while (curr->GetNext() != &this->head) {
+
+      // 拿到head 我们需要和当前的值进行对比
+      // 如果是相同的 就要去掉 否则就更新prev _value
+
+      // 但是一开始prev_value是不存在的 所以
+      // 最好是在最开始特判一下
+      if (curr->GetNext()->GetValue() == prev_value) {
+        // 这里需要注意的是，我们的链表是循环链表
+        // 所以我们需要对nullptr进行特判
+        // 但是我们在实现的时候，已经把head的next指向了head
+        // 所以我们只需要判断next是否等于head就行了
+
+        // 这里的比较是有问题的，因为我们没有考虑到循环链表的情况
+        // 这里应该是比较两个节点的值
+        // 不能调这个，因为没有释放内存
+        // curr->EraseAfter();
+        SinglyLinkedListNode* tmp = curr->GetNext();
+        curr->EraseAfter();
+        delete tmp;
+      } else {
+        prev_value = curr->GetNext()->GetValue();
+      }
+
+      curr = curr->GetNext();
+    }
+  }
+
+  void reverse() {
+    // reverse 操作也非常简单
+    // 而且我昨天睡觉的时候想到了一个不用额外的head的方法
+    // 就是用一个指针保存begin
+    // 然后把head短接
+    // 然后不断的insert after head 即可
+
+    if (this->empty()) {
+      return;
+    }
+
+    SinglyLinkedListNode* curr = this->head.GetNext();
+
+    // 把head短接
+    this->head.SetNext(&this->head);
+
+    while (curr != &this->head) {
+      // 先拿到next
+      SinglyLinkedListNode* next = curr->GetNext();
+      // 然后把curr插入到head后面
+      this->head.InsertAfter(curr);
+      // update curr
+      curr = next;
+    }
+  }
+
+  iterator find(int value) {
+    auto iter = begin();
+    for (; iter != end(); iter++) {
+      if (*iter == value) {
+        break;
+      }
+    }
+    return iter;
+  }
+
+  // Removes all elements satisfying specific criteria. Invalidates only the
+  // iterators and references to the removed elements.
+  void remove(int value) {
+    // 显然还是需要一个work指针
+    // 或者使用迭代器？
+    auto iter = begin();
+    while (iter != end()) {
+      if (*iter == value) {
+        // 原来如此，这个函数回返回删除后的迭代器，刚好满足这里的要求
+        iter = erase_after(iter);
+      } else {
+        ++iter;
+      }
+    }
+  }
+
+  bool contains(int value) { return find(value) != end(); }
+
+  // Moves elements from another forward_list to *this. The elements are
+  // inserted after the element pointed to by pos.
+  static void splice_after(iterator pos, SinglyLinkedList& other) {
+    // 最常见的方式应该是调用 splice_after(end())
+    // 也就是把两个链表给拼接起来
+
+    SinglyLinkedListNode* other_head = &other.head;
+
+    // 同样，我们需要从pos里面拿到他的节点指针
+    SinglyLinkedListNode* insert_after = pos.current_node;
+
+    // 我们需要挨个把other的元素给pop出来
+    while (other_head->GetNext() != &other.head) {
+      // 不对，我们这样直接操作的都是迭代器
+      // 我们需要拿到指针！
+      SinglyLinkedListNode* front = other_head->GetNext();
+
+      // 然后把这个节点插入到pos后面
+      insert_after->InsertAfter(front);
+      // 然后更新insert_after
+      insert_after = front;
+
+      other_head->EraseAfter();
     }
   }
 
