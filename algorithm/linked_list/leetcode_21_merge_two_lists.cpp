@@ -55,24 +55,31 @@ public:
       if (list1->val < list2->val) {
         tail->next = list1;
         list1 = list1->next;
-        tail = tail->next;
+        // 可以吧tail提取出来
+        // tail = tail->next;
       } else {
         tail->next = list2;
         list2 = list2->next;
-        tail = tail->next;
+        // tail = tail->next;
       }
-    }
-
-    // 这个时候可能有链表还有，就全都挂到最后即可
-    ListNode* remaining_list = list1 ? list1 : list2;
-    while (remaining_list) {
-      tail->next = remaining_list;
-      remaining_list = remaining_list->next;
       tail = tail->next;
     }
 
+    // 这个时候可能有链表还有，就全都挂到最后即可
+    // 哦 不对 这里不用在来一个循环了
+    // 这是链表，直接挂在后面就行了！
+    ListNode* remaining_list = list1 ? list1 : list2;
+    // while (remaining_list) {
+    //   tail->next = remaining_list;
+    //   remaining_list = remaining_list->next;
+    //   tail = tail->next;
+    // }
+    tail->next = remaining_list;
+
+    // 那这样的话，这里就不用更新最后的tail地址了
+    // 因为merge到最后 一定会有一个链表会剩下！
     // 最终，让tail指向nullptr, 结束这个链表
-    tail->next = nullptr;
+    // tail->next = nullptr;
     return head.next;
   }
 };
