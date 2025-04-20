@@ -9,3 +9,6 @@ target_link_libraries(test_singly_linked_list PRIVATE doctest::doctest)
 # # Register with CTest for better test management
 # include(CTest)
 # add_test(NAME test_singly_linked_list COMMAND test_singly_linked_list)
+
+add_executable(test_leetcode_21_merge_two_lists leetcode_21_merge_two_lists.cpp)
+target_link_libraries(test_leetcode_21_merge_two_lists PRIVATE doctest::doctest)
