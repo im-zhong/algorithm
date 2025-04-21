@@ -12,3 +12,25 @@ target_link_libraries(test_singly_linked_list PRIVATE doctest::doctest)
 
 add_executable(test_leetcode_21_merge_two_lists leetcode_21_merge_two_lists.cpp)
 target_link_libraries(test_leetcode_21_merge_two_lists PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_86_partition_list leetcode_86_partition_list.cpp)
+target_link_libraries(test_leetcode_86_partition_list PRIVATE doctest::doctest)
+
+# 不行，不能用 - , 我们双击没有办法全选，还是全部用_吧
+add_executable(test_leetcode_23_merge-k-sorted-lists leetcode_23_merge-k-sorted-lists.cpp)
+target_link_libraries(test_leetcode_23_merge-k-sorted-lists PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_19_remove-nth-node-from-end-of-list leetcode_19_remove-nth-node-from-end-of-list.cpp)
+target_link_libraries(test_leetcode_19_remove-nth-node-from-end-of-list PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_LCR_140_lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof leetcode_LCR_140_lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof.cpp)
+target_link_libraries(test_leetcode_LCR_140_lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_876_middle-of-the-linked-list leetcode_876_middle-of-the-linked-list.cpp)
+target_link_libraries(test_leetcode_876_middle-of-the-linked-list PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_141_linked_list_cycle leetcode_141_linked_list_cycle.cpp)
+target_link_libraries(test_leetcode_141_linked_list_cycle PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_160_intersection_of_two_linked_lists leetcode_160_intersection_of_two_linked_lists.cpp)
+target_link_libraries(test_leetcode_160_intersection_of_two_linked_lists PRIVATE doctest::doctest)
