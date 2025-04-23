@@ -57,4 +57,4 @@ All the algorithms.
 
 ## prompts
 
-1. write unit test by using the given examples. do not use subcase, section, use only TEST_CASE, do not help me do the solution, only give me the test cases.
+1. write unit test by using the given examples. do not use subcase, section, CASE and all the other stuff, use only TEST_CASE, do not help me do the solution, only give me the test cases.

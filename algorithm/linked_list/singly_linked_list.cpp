@@ -582,6 +582,10 @@ public:
     // 非常简单，应该就是保存一个当前的节点指针就行了 work
     // 从head开始
 
+    // 我们这里并不是使用快慢指针实现的
+    // 而是直接比较相邻的两个元素，如果相同，则删除第二个元素
+    // 这种方式对于链表来说是合适的
+
     SinglyLinkedListNode* curr = this->head.GetNext();
     int prev_value = curr->GetValue();
 
