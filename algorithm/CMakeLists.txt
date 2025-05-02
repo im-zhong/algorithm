@@ -1,3 +1,7 @@
 add_subdirectory(linked_list)
 add_subdirectory(binary_tree)
 add_subdirectory(array)
+add_subdirectory(divide_and_conquer)
+add_subdirectory(dynamic_programming)
+add_subdirectory(backtrack)
+add_subdirectory(hash)

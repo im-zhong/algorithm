@@ -9,3 +9,18 @@ target_link_libraries(test_binary_heap PRIVATE doctest::doctest)
 # # Register with CTest for better test management
 # include(CTest)
 # add_test(NAME test_binary_heap COMMAND test_binary_heap)
+
+add_executable(test_leetcode_111_minimum_depth_of_binary_tree leetcode_111_minimum_depth_of_binary_tree.cpp)
+target_link_libraries(test_leetcode_111_minimum_depth_of_binary_tree PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_104_maximum_depth_of_binary_tree leetcode_104_maximum_depth_of_binary_tree.cpp)
+target_link_libraries(test_leetcode_104_maximum_depth_of_binary_tree PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_144_binary_tree_preorder_traversal leetcode_144_binary_tree_preorder_traversal.cpp)
+target_link_libraries(test_leetcode_144_binary_tree_preorder_traversal PRIVATE doctest::doctest)
+
+add_executable(test_binary_tree binary_tree.cpp)
+target_link_libraries(test_binary_tree PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_543_diameter_of_binary_tree leetcode_543_diameter_of_binary_tree.cpp)
+target_link_libraries(test_leetcode_543_diameter_of_binary_tree PRIVATE doctest::doctest)

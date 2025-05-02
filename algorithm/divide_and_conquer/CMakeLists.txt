@@ -1,0 +1,4 @@
+project(divide_and_conquer)
+
+add_executable(test_divide_and_conquer divide_and_conquer.cpp)
+target_link_libraries(test_divide_and_conquer PRIVATE doctest::doctest)

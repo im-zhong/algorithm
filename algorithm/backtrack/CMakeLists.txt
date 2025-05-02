@@ -1,0 +1,5 @@
+project(backtrack)
+
+
+add_executable(test_leetcode_46_permutations leetcode_46_permutations.cpp)
+target_link_libraries(test_leetcode_46_permutations PRIVATE doctest::doctest)

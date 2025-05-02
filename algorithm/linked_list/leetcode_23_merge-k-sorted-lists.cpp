@@ -169,6 +169,83 @@ public:
 
     return head.next;
   }
+
+  // 递归，分治算法
+  // 先给出合并两个链表的算法
+  ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+    // create a dummp head
+    ListNode head{0, nullptr};
+    // make head point to it self, for recurrent list
+    // head.next = &head;
+    // 不过好像也不需要，因为题目中给出的是一个简单的单链表
+
+    // 再定义一个tail 指向最后一个元素
+    // 每次都在tail后面插入元素 然后更新tail
+    ListNode* tail = &head;
+
+    while (list1 && list2) {
+      // 找到两者的最小值
+      if (list1->val < list2->val) {
+        tail->next = list1;
+        list1 = list1->next;
+        // 可以吧tail提取出来
+        // tail = tail->next;
+      } else {
+        tail->next = list2;
+        list2 = list2->next;
+        // tail = tail->next;
+      }
+      tail = tail->next;
+    }
+
+    // 这个时候可能有链表还有，就全都挂到最后即可
+    // 哦 不对 这里不用在来一个循环了
+    // 这是链表，直接挂在后面就行了！
+    ListNode* remaining_list = list1 ? list1 : list2;
+    // while (remaining_list) {
+    //   tail->next = remaining_list;
+    //   remaining_list = remaining_list->next;
+    //   tail = tail->next;
+    // }
+    tail->next = remaining_list;
+
+    // 那这样的话，这里就不用更新最后的tail地址了
+    // 因为merge到最后 一定会有一个链表会剩下！
+    // 最终，让tail指向nullptr, 结束这个链表
+    // tail->next = nullptr;
+    return head.next;
+  }
+
+  ListNode* mergeKListsImpl(std::vector<ListNode*>& lists, int begin, int end) {
+
+    // 递归结束条件
+    if (begin >= end) {
+      return nullptr;
+    }
+    if ((end - begin) == 1) {
+      return lists[begin];
+    }
+
+    int middle = begin + (end - begin) / 2;
+    ListNode* left_list = mergeKListsImpl(lists, begin, middle);
+    ListNode* right_list = mergeKListsImpl(lists, middle, end);
+    return mergeTwoLists(left_list, right_list);
+  }
+
+  // 然后解决合并K个生序链表的算法
+  ListNode* mergeKLists3(std::vector<ListNode*>& lists) {
+
+    // 应该先找到链表的中点
+    // 把两个链表给分开？
+    // 不对不对！傻逼了
+    // 参数是一个数组啊
+    // 我们是把左边的所有链表合并成一条有序的链表
+    // 右边的链表合并成一条有序的链表
+    // 然后再把左边和右边的给合并起来
+    // 需要写一个辅助函数
+
+    return mergeKListsImpl(lists, 0, lists.size());
+  }
 };
 
 TEST_CASE("Example 1: Multiple non-empty lists") {
