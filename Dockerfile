@@ -15,7 +15,7 @@ RUN sed -e 's|^metalink=|#metalink=|g' \
 
 # Difftastic (a syntax-aware diff tool)
 RUN dnf update -y && \
-    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip pip difft ninja
+    dnf install -y clear awk wget g++ clang clang-tools-extra cmake vim git zip pip difft ninja gdb lldb
 
 RUN pip install --upgrade pip && \
     pip install ruff uv

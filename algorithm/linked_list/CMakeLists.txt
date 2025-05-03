@@ -37,3 +37,10 @@ target_link_libraries(test_leetcode_160_intersection_of_two_linked_lists PRIVATE
 
 add_executable(test_leetcode_83_remove_duplicates_from_sorted_list leetcode_83_remove_duplicates_from_sorted_list.cpp)
 target_link_libraries(test_leetcode_83_remove_duplicates_from_sorted_list PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_146_lru_cache leetcode_146_lru_cache.cpp)
+target_link_libraries(test_leetcode_146_lru_cache PRIVATE doctest::doctest)
+
+
+add_executable(test_leetcode_460_lfu_cache leetcode_460_lfu_cache.cpp)
+target_link_libraries(test_leetcode_460_lfu_cache PRIVATE doctest::doctest)
