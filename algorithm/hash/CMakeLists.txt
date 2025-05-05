@@ -2,3 +2,9 @@ project(hash)
 
 add_executable(test_linked_hash_map linked_hash_map.cpp)
 target_link_libraries(test_linked_hash_map PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_380_insert_delete_getrandom_o1 leetcode_380_insert_delete_getrandom_o1.cpp)
+target_link_libraries(test_leetcode_380_insert_delete_getrandom_o1 PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_710_random_pick_with_blacklist leetcode_710_random_pick_with_blacklist.cpp)
+target_link_libraries(test_leetcode_710_random_pick_with_blacklist PRIVATE doctest::doctest)
