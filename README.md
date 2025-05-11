@@ -58,3 +58,19 @@ All the algorithms.
 ## prompts
 
 1. write unit test by using the given examples. do not use subcase, section, CASE and all the other stuff, use only TEST_CASE, do not help me do the solution, only give me the test cases.
+
+## refs
+
+1. <https://cp-algorithms.com/>
+2. <https://oi-wiki.org/>
+3. <https://labuladong.online/algo/>
+4. <https://codeforces.com/>
+5. <https://vjudge.net/article/45>
+
+1. cp-algorithms里面对于数学相关的算法的划分还是比较细致的，包括
+   1. Algebra
+   2. Combinatorics
+   3. Geometry
+   4. Linear Algrebra
+   5. Number Theory
+2. 我要不要也划分这么细呢？首先，我对数学保持绝对的尊重，所以我应该不会刷太多数学相关的题目，可能每种类型的就只刷几道而已，如果都分开放的话，感觉也没必要，要不就都叫数学，math，但是这样显得我很不专业。。。算了，我本来就不是数学专业的。嘿嘿

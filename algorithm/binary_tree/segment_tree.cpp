@@ -4,6 +4,7 @@
 // https://cp-algorithms.com/data_structures/segment_tree.html
 // https://oi-wiki.org/ds/seg/
 // https://labuladong.online/algo/data-structure-basic/segment-tree-basic/
+// https://labuladong.online/algo/data-structure/segment-tree-implement/
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <algorithm>
@@ -12,6 +13,13 @@
 #include <functional>
 #include <queue>
 #include <vector>
+
+// TIPs:
+// 其实可以注意到，线段树的三个重要的函数的实现，都是子问题式的递归
+// 也就是函数的参数都是可以看作作用在一颗子树的一个字问题，都有返回值
+// build, update, query 都是这样的
+//
+// 线段树的中间节点一定有两个孩子
 
 class SegmentTree {
   // 构造函数，给定一个数组，初始化线段树，时间复杂度 O(N)
@@ -48,6 +56,7 @@ public:
 
   // 这个query不用递归写不太好写
   int query_impl(int begin, int end, TreeNode* root) {
+    // TIPs: 多写assert
     assert(root);
     assert(begin >= root->begin && end <= root->end);
 
@@ -87,6 +96,7 @@ public:
   }
 
   // 修改root中 i, i+1 区间的值，并返回新的聚合值
+  // 现在看来，这个函数不需要返回被修改的值
   int update_impl(int i, int val, TreeNode* root) {
 
     // 感觉有返回值的递归没法这么写
@@ -99,7 +109,7 @@ public:
 
     assert(root);
 
-    // 寻找区间 [i, i+1)
+    // 寻找区间 [i, i+1) 叶子节点
     if (root->begin == i && root->end == i + 1) {
       nums[i] = val;
       root->value = val;
@@ -124,12 +134,19 @@ public:
       // 这是root 的左孩子改了，那么root自己的值也要改
       // 但是有一种情况，就是我们没有右孩子，这个时候要怎么计算merge的结果？
       // 傻逼吗？没有右孩子，节点的值就是左孩子的值啊
-      if (root->right) {
-        root->value = merge(root->left->value, root->right->value);
-      } else {
-        root->value = root->left->value;
-      }
-      return root->value;
+      // ! 不对！难道，线段树，一定不可能只有一个孩子？！
+      // 思考一下，孩子是怎么来的？是一个区间一分为二来的
+      // 如果这个区间的长度大于1，那么他一定有两个孩子
+      // 如果这个区间就是1，那么一定没有孩子！！！
+      // 卧槽！！这么重要的性质！！！
+      //
+      // 所以这里的判断都多余了
+      // if (root->right) {
+      //   root->value = merge(root->left->value, root->right->value);
+      // } else {
+      //   root->value = root->left->value;
+      // }
+      // return root->value;
     }
 
     if (begin >= middle) {
@@ -137,14 +154,20 @@ public:
       assert(root->right);
 
       int updated_value = update_impl(i, val, root->right);
-      root->value = merge(root->left->value, root->right->value);
-      return root->value;
+
+      // 这里其实也是后序位置
+      // root->value = merge(root->left->value, root->right->value);
+      // return root->value;
     }
 
-    assert(false);
+    // 后序位置
+    root->value = merge(root->left->value, root->right->value);
+    return root->value;
+    // assert(false);
   }
 
 private:
+  // build：子问题式递归：将 nums[begin, end) 中的元素构建成线段树，返回根节点
   TreeNode* create_segment_tree(int begin, int end) {
     // 对于每个区间，我们同样采用[) 的方式
     // 因为是建树，我们用字问题的方式，函数会递归的返回建立好的树的根节点
@@ -169,9 +192,12 @@ private:
     node->left = create_segment_tree(begin, middle);
     node->right = create_segment_tree(middle, end);
 
+    // 后序位置！这个位置真的很关键啊
     node->begin = begin;
     node->end = end;
+    // 根据左右子树的的值，计算该节点的聚合值
     node->value = merge(node->left->value, node->right->value);
+    // 最后返回root节点
     return node;
   }
 

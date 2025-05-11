@@ -27,3 +27,6 @@ target_link_libraries(test_leetcode_543_diameter_of_binary_tree PRIVATE doctest:
 
 add_executable(test_segment_tree segment_tree.cpp)
 target_link_libraries(test_segment_tree PRIVATE doctest::doctest)
+
+add_executable(test_leetcode_307_range_sum_query_mutable leetcode_307_range_sum_query_mutable.cpp)
+target_link_libraries(test_leetcode_307_range_sum_query_mutable PRIVATE doctest::doctest)

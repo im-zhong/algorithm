@@ -120,3 +120,5 @@ void backtrack(Node*root) {
         printf("I'll leave the branch from %s to %s\n", child->val.c_str(), root->val.c_str());
     }
 }
+
+13. 多叉树我也放到这里了，包括各种树的变种，trie树等等都放到这里，
